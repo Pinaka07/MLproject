@@ -42,8 +42,44 @@ class ModelTrainer:
                 "XGBRegressor": XGBRegressor(),
                 "CatBoosting Regressor": CatBoostRegressor(verbose=False)
             }
+            params={
+                "Decision Tree": {
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'max_features':['sqrt','log2',None],
+                    'splitter':['best','random'],
+                    'max_depth':[None,5,10,20]
 
-            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models)
+                },
+                "Gradient Boosting": {
+                    'learning_rate':[.1,.01,.05,.001],
+                    'loss':['huber','squared_error','absolute_error','quantile'],
+                    'subsample':[0.6,0.7,0.75,0.9],
+                    'max_features':['sqrt','log2',None],
+                    'n_estimators':[8,16,32,64,128]
+                },
+                "Random Forest": {
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'max_features':['sqrt','log2',None],
+                    'n_estimators':[8,16,32,64,128]
+                },
+                "Linear Regression": {},
+                "K-Neighbors Regressor": {
+                    'n_neighbors':[5,7,9,11,13],
+                    'weights':['uniform','distance'],
+                    'algorithm':['auto','ball_tree','kd_tree','brute']
+                },
+                "XGBRegressor":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators':[8,16,32,64,128,256]
+                },
+                "CatBoosting Regressor":{
+                    'depth':[6,8,10],
+                    'learning_rate':[.1,.01,.05,.001],
+                    'iterations':[30,50,100]
+                }
+            }
+
+            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models,param=params)
 
             best_model_score=max(model_report.values())
             best_model_name=list(model_report.keys())[
